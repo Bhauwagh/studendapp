@@ -3,16 +3,17 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
+require("dotenv").config();
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// MySQL connection
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "Avinash@83083",
-  database: "students_db"
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "students_db"
 });
 
 db.connect(err => {
@@ -20,7 +21,6 @@ db.connect(err => {
   console.log("MySQL Connected...");
 });
 
-// Routes
 app.post("/students", (req, res) => {
   const { name, age, grade } = req.body;
   const sql = "INSERT INTO students (name, age, grade) VALUES (?, ?, ?)";
